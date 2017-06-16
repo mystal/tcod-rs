@@ -1,5 +1,5 @@
 use bindings::ffi;
-use bindings::{AsNative, c_bool};
+use bindings::AsNative;
 
 pub struct Map {
     tcod_map: ffi::TCOD_map_t,
@@ -32,8 +32,8 @@ impl Map {
         assert!(x < width && y < height);
         unsafe {
             ffi::TCOD_map_set_properties(self.tcod_map, x, y,
-                                         transparent as c_bool,
-                                         walkable as c_bool);
+                                         transparent,
+                                         walkable);
         }
     }
 
@@ -42,7 +42,7 @@ impl Map {
         assert!(origin_x >= 0 && origin_y >= 0);
         unsafe {
             ffi::TCOD_map_compute_fov(self.tcod_map, origin_x, origin_y, max_radius,
-                                     light_walls as c_bool,
+                                     light_walls,
                                      algo as u32);
         }
     }
@@ -52,7 +52,7 @@ impl Map {
         let (width, height) = self.size();
         assert!(x < width && y < height);
         unsafe {
-            ffi::TCOD_map_is_in_fov(self.tcod_map, x, y) != 0
+            ffi::TCOD_map_is_in_fov(self.tcod_map, x, y)
         }
     }
 
@@ -61,13 +61,13 @@ impl Map {
         let (width, height) = self.size();
         assert!(x < width && y < height);
         unsafe {
-            ffi::TCOD_map_is_walkable(self.tcod_map, x, y) != 0
+            ffi::TCOD_map_is_walkable(self.tcod_map, x, y)
         }
     }
     
     pub fn clear(&mut self, transparent: bool, walkable: bool) {
         unsafe {
-            ffi::TCOD_map_clear(self.tcod_map, transparent as c_bool, walkable as c_bool);
+            ffi::TCOD_map_clear(self.tcod_map, transparent, walkable);
         }
     }
 }

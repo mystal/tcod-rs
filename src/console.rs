@@ -62,7 +62,7 @@ use std::mem::transmute;
 use std::path::Path;
 
 use bindings::ffi;
-use bindings::{AsNative, FromNative, c_bool, CString};
+use bindings::{AsNative, FromNative, CString};
 
 use colors::Color;
 use input::{Key, KeyPressFlags};
@@ -221,14 +221,14 @@ impl Root {
     /// Returns with true when the `Root` console is in fullscreen mode.
     pub fn is_fullscreen(&self) -> bool {
         unsafe {
-            ffi::TCOD_console_is_fullscreen() != 0
+            ffi::TCOD_console_is_fullscreen()
         }
     }
 
     /// Toggles between windowed and fullscreen mode.
     pub fn set_fullscreen(&mut self, fullscreen: bool) {
         unsafe {
-            ffi::TCOD_console_set_fullscreen(fullscreen as u8);
+            ffi::TCOD_console_set_fullscreen(fullscreen);
         }
     }
 
@@ -236,31 +236,31 @@ impl Root {
     /// number of milliseconds between the keypress and the time the keyboard repeat begins.
     /// The interval sets the time between the keyboard repeat events.
     /// With an initial delay of 0, the keyboard repeat feature is completely disabled.
-    pub fn set_keyboard_repeat(&mut self, initial_delay: i32, interval: i32) {
-        unsafe {
-            ffi::TCOD_console_set_keyboard_repeat(initial_delay, interval);
-        }
-    }
+    //pub fn set_keyboard_repeat(&mut self, initial_delay: i32, interval: i32) {
+    //    unsafe {
+    //        ffi::TCOD_console_set_keyboard_repeat(initial_delay, interval);
+    //    }
+    //}
 
     /// Disables the keyboard repeat feature. Equivalent to `set_keyboard_repeat` with an
     /// initial delay of 0.
-    pub fn disable_keyboard_repeat(&mut self) {
-        unsafe {
-            ffi::TCOD_console_disable_keyboard_repeat()
-        }
-    }
+    //pub fn disable_keyboard_repeat(&mut self) {
+    //    unsafe {
+    //        ffi::TCOD_console_disable_keyboard_repeat()
+    //    }
+    //}
 
     /// Returns true if the `Root` console is currently active.
     pub fn is_active(&self) -> bool {
         unsafe {
-            ffi::TCOD_console_is_active() != 0
+            ffi::TCOD_console_is_active()
         }
     }
 
     /// Returns true if the `Root` console has focus.
     pub fn has_focus(&self) -> bool {
         unsafe {
-            ffi::TCOD_console_has_mouse_focus() != 0
+            ffi::TCOD_console_has_mouse_focus()
         }
     }
 
@@ -294,7 +294,7 @@ impl Root {
     /// keyboard buffer. If false, it returns the first element from it.
     pub fn wait_for_keypress(&mut self, flush: bool) -> Key {
         let tcod_key = unsafe {
-            ffi::TCOD_console_wait_for_keypress(flush as c_bool)
+            ffi::TCOD_console_wait_for_keypress(flush)
         };
         tcod_key.into()
     }
@@ -315,7 +315,7 @@ impl Root {
     /// Returns with true if the `Root` console has been closed.
     pub fn window_closed(&self) -> bool {
         unsafe {
-            ffi::TCOD_console_is_window_closed() != 0
+            ffi::TCOD_console_is_window_closed()
         }
     }
 
@@ -339,8 +339,8 @@ impl Root {
 
     pub fn render_credits(&self, x : i32, y: i32, alpha: bool) -> bool {
         unsafe {
-            let result = ffi::TCOD_console_credits_render(x, y, alpha as c_bool);
-            result != 0
+            let result = ffi::TCOD_console_credits_render(x, y, alpha);
+            result
         }
 
     }
@@ -486,7 +486,7 @@ impl<'a> RootInitializer<'a> {
             let c_title = CString::new((*self.title).as_ref().as_bytes()).unwrap();
             ffi::TCOD_console_init_root(self.width, self.height,
                                         c_title.as_ptr(),
-                                        self.is_fullscreen as c_bool,
+                                        self.is_fullscreen,
                                         self.console_renderer as u32);
         }
         Root { _blocker: PhantomData }
@@ -910,7 +910,7 @@ pub trait Console : AsNative<ffi::TCOD_console_t> {
         assert!(x + width <= self.width());
         assert!(y + height <= self.height());
         unsafe {
-            ffi::TCOD_console_rect(*self.as_native(), x, y, width, height, clear as c_bool, background_flag as u32);
+            ffi::TCOD_console_rect(*self.as_native(), x, y, width, height, clear, background_flag as u32);
         }
     }
 
@@ -964,7 +964,7 @@ pub trait Console : AsNative<ffi::TCOD_console_t> {
         let c_title = title.as_ref().map_or(ptr::null(), |s| s.as_ptr());
         unsafe {
             ffi::TCOD_console_print_frame(*self.as_native(), x, y, width, height,
-                                          clear as c_bool, background_flag as u32,
+                                          clear, background_flag as u32,
                                           c_title);
         }
     }

@@ -37,3 +37,9 @@
 #
 # [target.i686-pc-windows-gnu.tcod]
 # rustc-flags = "-L precompiled/i686-pc-windows-gnu -l tcod"
+
+
+# macOS:
+#
+#[target.x86_64-apple-darwin.tcod]
+#rustc-flags = "-L precompiled/x86_64-apple-darwin -l tcod"

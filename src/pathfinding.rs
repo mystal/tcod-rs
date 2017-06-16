@@ -1,5 +1,5 @@
 use bindings::ffi;
-use bindings::{AsNative, c_bool, c_float, c_int, c_void};
+use bindings::{AsNative, c_float, c_int, c_void};
 use map::Map;
 
 enum PathInnerData<'a> {
@@ -84,7 +84,7 @@ impl<'a> AStar<'a> {
         unsafe {
             ffi::TCOD_path_compute(self.tcod_path,
                                    from_x, from_y,
-                                   to_x, to_y) != 0
+                                   to_x, to_y)
         }
     }
 
@@ -105,7 +105,7 @@ impl<'a> AStar<'a> {
             let mut x: c_int = 0;
             let mut y: c_int = 0;
             match ffi::TCOD_path_walk(self.tcod_path, &mut x, &mut y,
-                                      recalculate_when_needed as c_bool) != 0 {
+                                      recalculate_when_needed) {
                 true => Some((x, y)),
                 false => None,
             }
@@ -150,7 +150,7 @@ impl<'a> AStar<'a> {
 
     pub fn is_empty(&self) -> bool {
         unsafe {
-            ffi::TCOD_path_is_empty(self.tcod_path) != 0
+            ffi::TCOD_path_is_empty(self.tcod_path)
         }
     }
 
@@ -230,7 +230,7 @@ impl<'a> Dijkstra<'a> {
         let (x, y) = destination;
         if x >= 0 && y >= 0 && x < self.width && y < self.height {
             unsafe {
-                ffi::TCOD_dijkstra_path_set(self.tcod_path, x, y) != 0
+                ffi::TCOD_dijkstra_path_set(self.tcod_path, x, y)
             }
         } else {
             false
@@ -249,7 +249,7 @@ impl<'a> Dijkstra<'a> {
         unsafe {
             let mut x: c_int = 0;
             let mut y: c_int = 0;
-            match ffi::TCOD_dijkstra_path_walk(self.tcod_path, &mut x, &mut y) != 0 {
+            match ffi::TCOD_dijkstra_path_walk(self.tcod_path, &mut x, &mut y) {
                 true => Some((x, y)),
                 false => None,
             }
@@ -289,7 +289,7 @@ impl<'a> Dijkstra<'a> {
 
     pub fn is_empty(&self) -> bool {
         unsafe {
-            ffi::TCOD_dijkstra_is_empty(self.tcod_path) != 0
+            ffi::TCOD_dijkstra_is_empty(self.tcod_path)
         }
     }
 
@@ -313,7 +313,7 @@ impl Iterator for AStarIterator {
             let mut x: c_int = 0;
             let mut y: c_int = 0;
             match ffi::TCOD_path_walk(self.tcod_path, &mut x, &mut y,
-                                      self.recalculate as c_bool) != 0 {
+                                      self.recalculate) {
                 true => Some((x, y)),
                 false => None,
             }
@@ -332,7 +332,7 @@ impl Iterator for DijkstraIterator {
         unsafe {
             let mut x: c_int = 0;
             let mut y: c_int = 0;
-            match ffi::TCOD_dijkstra_path_walk(self.tcod_path, &mut x, &mut y) != 0 {
+            match ffi::TCOD_dijkstra_path_walk(self.tcod_path, &mut x, &mut y) {
                 true => Some((x, y)),
                 false => None,
             }

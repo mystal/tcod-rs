@@ -57,7 +57,7 @@ impl Rng {
 
     pub fn set_distribution(&self, distribution: Distribution) {
         unsafe {
-            ffi::TCOD_random_set_distribution(self.tcod_random, distribution as u32);
+            ffi::TCOD_random_set_distribution(self.tcod_random, distribution as ffi::TCOD_distribution_t);
         }
     }
 

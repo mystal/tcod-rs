@@ -8,9 +8,6 @@ pub use self::libc::{c_char, c_int, c_float, c_uint, c_void, uint8_t};
 use std::mem::transmute;
 use super::input::KeyCode;
 
-#[allow(non_camel_case_types)]
-pub type c_bool = uint8_t;
-
 pub trait AsNative<T> {
     unsafe fn as_native(&self) -> &T;
 }

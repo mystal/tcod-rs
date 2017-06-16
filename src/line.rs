@@ -52,7 +52,7 @@ impl Line {
             ffi::TCOD_line_step_mt(&mut x, &mut y, &mut self.tcod_line)
         };
 
-        if end == 0 {
+        if !end {
             Some((x, y))
         } else {
             None
@@ -71,7 +71,7 @@ impl Line {
             let step = unsafe {
                 ffi::TCOD_line_step_mt(&mut x, &mut y, &mut self.tcod_line)
             };
-            if step != 0 {
+            if step {
                 break
             }
 	    }
