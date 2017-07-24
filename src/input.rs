@@ -78,6 +78,7 @@ pub enum KeyCode {
     ScrollLock = ffi::TCODK_SCROLLLOCK as isize,
     Spacebar = ffi::TCODK_SPACE as isize,
     Char = ffi::TCODK_CHAR as isize,
+    Text = ffi::TCODK_TEXT as isize,
 }
 
 impl Default for KeyCode {
@@ -90,6 +91,7 @@ impl Default for KeyCode {
 pub struct Key {
     pub code: KeyCode,
     pub printable: char,
+    // TODO: Consider adding text field.
     pub pressed: bool,
     pub left_alt: bool,
     pub left_ctrl: bool,
@@ -103,7 +105,8 @@ pub struct Key {
 impl From<ffi::TCOD_key_t> for Key {
     fn from(tcod_key: ffi::TCOD_key_t) -> Key {
         Key {
-            code: keycode_from_u32(tcod_key.vk).unwrap(),
+            code: keycode_from_u32(tcod_key.vk)
+                .expect(&format!("Received an unrecognized keycode: {}", tcod_key.vk)),
             printable: tcod_key.c as u8 as char,
             pressed: tcod_key.pressed,
             left_alt: tcod_key.lalt,

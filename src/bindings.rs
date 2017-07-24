@@ -30,7 +30,7 @@ impl <T, U: AsNative<T> + ?Sized> AsNative<T> for Box<U> {
 
 pub fn keycode_from_u32(input: u32) -> Option<KeyCode> {
     match input {
-        x @ 0 ... 65 => Some(unsafe { transmute(x) }),
+        x @ 0 ... 66 => Some(unsafe { transmute(x) }),
         _ => None
     }
 }
