@@ -5711,7 +5711,7 @@ extern "C" {
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct TCOD_bsp_t {
-    pub tree: TCOD_tree_t,
+    tree: TCOD_tree_t,
     pub x: libc::c_int,
     pub y: libc::c_int,
     pub w: libc::c_int,
@@ -5772,6 +5772,11 @@ impl Clone for TCOD_bsp_t {
 }
 impl Default for TCOD_bsp_t {
     fn default() -> Self { unsafe { ::std::mem::zeroed() } }
+}
+impl TCOD_bsp_t {
+    pub unsafe fn tree(&mut self) -> &mut TCOD_tree_t {
+        &mut self.tree
+    }
 }
 pub type TCOD_bsp_callback_t =
     ::std::option::Option<unsafe extern "C" fn(node: *mut TCOD_bsp_t,
